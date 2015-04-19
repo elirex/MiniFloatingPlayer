@@ -1,0 +1,12 @@
+{
+	"manifest_version": 2,
+	"name": "Player",
+	"version": "0.1",
+	"description": "This is chrome app that can watch youtube video at another window.",
+	"permissions": ["alwaysOnTopWindows", "webview", "http://gdata.youtube.com/*", "storage"],
+	"app": {
+		"background": {
+			"scripts": ["scripts/background.js"]
+		}
+	}	
+}
