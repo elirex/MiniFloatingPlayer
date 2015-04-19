@@ -1,0 +1,10 @@
+body {
+	margin: 0;
+}
+#textarea_Url {
+	border: 0;
+	width: 100vw ;
+	height: 100vh;
+	resize: none;
+	font-size: 20pt;
+}
