@@ -3,7 +3,7 @@
 	"name": "Player",
 	"version": "0.1",
 	"description": "This is chrome app that can watch youtube video at another window.",
-	"permissions": ["alwaysOnTopWindows", "webview", "http://gdata.youtube.com/*", "storage"],
+	"permissions": ["alwaysOnTopWindows", "webview", "http://gdata.youtube.com/*", "storage", "fullscreen"],
 	"app": {
 		"background": {
 			"scripts": ["scripts/background.js"]
