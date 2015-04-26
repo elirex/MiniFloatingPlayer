@@ -1,5 +1,6 @@
 chrome.app.runtime.onLaunched.addListener(launch);
 
+var LOG_TAG = 'background ';
 var screenWidth = screen.availWidth;
 var screenHeigh = screen.availHeight;
 var width = 600;

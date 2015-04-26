@@ -20,35 +20,45 @@
 	$$("#btn-fullscreen").addEventListener("click", onClickFullScreen);
 	$$("#body").addEventListener("mousemove", onMouseMove);
 	
-	var btnAppOperate = $$("#test");
+	var btnAppAction = $$("#btn-app-action");
+	var btnWindowAction = $$("#btn-window-action");
 	var timeout = null;
+
 	function clearHide() {
 		setTimeout(function() {
 			clearTimeout(timeout);
 		}, 50);
-	};
+	}
+
 	function onMouseMove() {
-		btnAppOperate.style.display = 'block';
+		btnAppAction.style.display = 'block';
+		btnWindowAction.style.display = 'block';
 		clearTimeout(timeout);
 		timeout = setTimeout(function () {
-			btnAppOperate.style.display = 'none';
+			btnAppAction.style.display = 'none';
+			btnWindowAction.style.display = 'none';
 		}, 1500);
-	};
+	}
 	
 
 	function event(e) {
 		 setTimeout(function() {
-			console.log(LOG_TAG + "paste the " + e.target.value );
+			console.log(LOG_TAG + "paste the " + e.target.value);
 			player._controller.addItem(e);
 			$$("#textarea_Url").style.display = 'none';
 		 }, 100); 
 	}
 
 	function onClickClose() {
-		player.appWindow.restore();
-		setTimeout(function() {
-			player.appWindow.contentWindow.close();
-		}, 500);
+		var isFullscreen = player.appWindow.isFullscreen();
+		if(isFullscreen) {
+			player.appWindow.restore();
+			setTimeout(function() {
+				player.appWindow.close();
+			}, 1000);
+		} else {
+			player.appWindow.close();
+		}
 	}
 
 	function onClickFullScreen() {
