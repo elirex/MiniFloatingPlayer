@@ -39,7 +39,7 @@
 		xmlHttp.open("GET", url, true);
 		xmlHttp.send();
 		var storage = this._storage;
-		 xmlHttp.onreadystatechange = function() {
+		xmlHttp.onreadystatechange = function() {
 		 	console.log(LOG_TAG + "xmlHttp.status=" + xmlHttp.status + ", xmlHttp.readyState=" + xmlHttp.readyState);
 		 	if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
 		 		var obj = JSON.parse(xmlHttp.responseText);
