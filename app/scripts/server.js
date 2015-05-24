@@ -2,49 +2,78 @@
 	"use strict"
 	
 	var LOGTAG = "Server ";
+	var fs = require('browserify-fs');
 
+	var tcpServer = chrome.sockets.tcpServer;
+	var tcpSocket = chrome.sockets.tcp;
+	var filelist;
 	function Server() {
-		this._tcpServer = chrome.sockets.tcpServer;
-		this._tcpSocket = chrome.sockets.tcp;
+		// this._tcpServer = chrome.sockets.tcpServer;
+		// this._tcpSocket = chrome.sockets.tcp;
 		this._serverSocketId = null;
 		this._filesMap = {};
+
+		fs.readdir('/', function(err, files) {
+			filelist = files;
+			console.log(LOGTAG, 'files:', filelist);
+		});
 		// chrome.system.network.getNetworkInterfaces(function(interfaces) {
 		// 	for(var i in interfaces) {
 		// 		var subInterface = interfaces[i];
 		// 		console.log(LOGTAG + "Inferface: name=" + subInterface.name + " ip=" + subInterface.address);
 		// 	}
 		// });
+
+		// Chrome file system example
+		// chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(theEntry) {
+		// 	if(!theEntry) {
+		// 		console.log(LOGTAG, 'No Directory');
+		// 		return;
+		// 	}
+		// 	console.log(LOGTAG, theEntry);
+		// });
+		
+
 	}
 
 	/* The public methods */
 	Server.prototype.createServerSocket = function() {
-		var tcpServer = this._tcpServer;
-		var tcpSocket = this._tcpSocket;
-		var serverSocketId = this._serverSocketId;
-		tcpServer.create({}, function(socketInfo) {
-			serverSocketId = socketInfo.socketId;
-			tcpServer.listen(serverSocketId, "127.0.0.1", 5566, 50, function(result) {
-				console.log(LOGTAG + "Listening:", result);
-				tcpServer.onAccept.addListener(this._onAccept);
-				tcpSocket.onReceive.addListener(this._onReceive);
-			});
-		});
+		console.log(LOGTAG, "this._filesMap", this._filesMap);
+		tcpServer.create({}, this._onCreate.bind(this));
+	};
+
+	Server.prototype._onCreate = function(createInfo) {
+		this.serverSocketId = createInfo.socketId;
+		if(this.serverSocketId > 0) {
+			tcpServer.onAccept.addListener(this._onAccept.bind(this));
+			tcpServer.listen(this.serverSocketId, '127.0.0.1', 5566, 50, this._onListenComplete.bind(this));
+		} else {
+			console.log(LOGTAG, 'error', 'Unable to create socket');
+		}
+	};
+
+	Server.prototype._onListenComplete = function(resultCode) {
+		if(resultCode !== 0) {
+			console.log(LOGTAG, 'error', 'Unable to listen to socket. Resultcode=' + resultCode);
+		} else {
+			tcpSocket.onReceive.addListener(this._onReceive.bind(this));
+		}
 	};
 
 	Server.prototype.closeServerSocket = function() {
-		var serverSocketId = this._serverSocketId;
-		var tcpServer = this._tcpServer;
-		var tcpSocket = this._tcpSocket;
-		if(serverSocketId) {
-			tcpServer.close(serverSocketId, function() {
+		// var serverSocketId = this._serverSocketId;
+		// var tcpServer = this._tcpServer;
+		// var tcpSocket = this._tcpSocket;
+		if(this.serverSocketId) {
+			tcpServer.close(this.serverSocketId, function() {
 				if(chrome.runtime.lastError) {
 					console.warn(LOGTAG, "chrome.sockets.tcpServer.close: " + chrome.runtime.lastError);
 				}
 			});
 		}
 
-		tcpServer.onAccept.removeListener(this._onAccept);
-		tcpSocket.onReceive.removeListener(this._onReceive);
+		tcpServer.onAccept.removeListener(this._onAccept.bind(this));
+		tcpSocket.onReceive.removeListener(this._onReceive.bind(this));
 	};
 
 	/* The private methods */
@@ -55,17 +84,15 @@
 	 * @param {object} acceptInfo that includes socketId and clientSocketId.
 	 */
 	Server.prototype._onAccept = function(acceptInfo) {
-		var tcpSocket = this._tcpSocket;
 		tcpSocket.setPaused(acceptInfo.clientSocketId, false);
-
-		if(acceptInfo.socketId != serverSocketId) {
+		if(acceptInfo.socketId != this.serverSocketId) {
 			return;
 		}
-		console.log(LOGTAG + "_onAccept", acceptInfo);
+		console.log(LOGTAG, "ACCEPT", acceptInfo);
 	};
 
 	Server.prototype._onReceive = function(receiveInfo) {
-		console.log(LOGTAG + "_onReceive", receiveInfo);
+		console.log(LOGTAG, "READ", receiveInfo);
 		var socketId = receiveInfo.socketId;
 
 		// Parse the request.
@@ -78,7 +105,7 @@
 		}
 
 		var keepAlive = false;
-		if(data.indexOf("Connection: keey-alive") != -1) {
+		if(data.indexOf("Connection: keep-alive") != -1) {
 			keepAlive = true;
 		}
 
@@ -88,33 +115,48 @@
 			return;
 		}
 		var uri = data.substring(4, uriEnd);
+	
 		// strip query string
 		var q = uri.indexOf("?");
 		if(q != -1) {
 			uri = uri.substring(0, q);
 		}
-		var file = this._filesMap[uri];
-		if(!!file == false) {
-			console.warn(LOGTAG + "_onReceive:", "File does not exist..." + uri);
-			writeErrorResponse(socketId, 404, keepAlive);
-			return;
-		}
-		this._write200Response(socketId, file, keepAlive);
+		// var file = this._filesMap[uri];
+		fs.readFile('/index.html', 'utf-8', function(err, data) {
+			console.log(data);
+			this._write200Response(socketId, data, keepAlive);
+		}.bind(this));
+		// console.log(LOGTAG, 'file=' + file);
+		// if(!!file == false) {
+		// 	console.warn(LOGTAG + "_onReceive:", "File does not exist..." + uri);
+		// 	this._writeErrorResponse(socketId, 404, this._keepAlive);
+		// 	return;
+		// }
+		// this._write200Response(socketId, file, this._keepAlive);
 	};
 
-	Server.prototype._write200Response = function(socketId, file) {
+
+	Server.prototype._write200Response = function(socketId, file, keepAlive) {
 		var header = this._getSuccessHeader(file, keepAlive);
-		var outputBuffer = new ArrayBuffer(header.byteLength + file.size);
+		var outputBuffer = new ArrayBuffer(header.byteLength + file.length);
 		var view = new Uint8Array(outputBuffer);
 		view.set(header, 0);
 
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
+			console.log(LOGTAG, "e", e.target.result);
 			view.set(new Uint8Array(e.target.resutl), header.byteLength);
-			this_sendReplyToSocket(socketId, outputBuffer, keepAlive);
-		};
-
-		fileReader.readAsArrayBuffer(file); 
+			console.log(LOGTAG, 'view', view);
+			var tmp = String.fromCharCode.apply(null, new Uint8Array(outputBuffer));
+			console.log(LOGTAG, 'data', tmp);
+			this._sendReplayToSocket(socketId, outputBuffer, keepAlive);
+		}.bind(this);
+		console.log(LOGTAG, 'file ' , file);
+		var aFileParts = [file];
+		var blob = new Blob(aFileParts, {type: 'text/plain'});
+		var output = new File([blob], 'index.html', {type: 'text/plain'});
+		// fileReader.readAsArrayBuffer(output);
+		fileReader.readAsText(blob);
 	};
 
 	Server.prototype._writeErrorResponse = function(socketId, errorCode, keepAlive) {
@@ -147,40 +189,46 @@
 			httpStatus = "HTTP/1.0 " + (errorCode || 404) + " Not found";
 		} else {
 			contentType = file.type || contentType;
-			contentLength = file.size;
+			contentLength = file.length;
 		}
 
-		var line = [httpStatus, "Content-length:" + contentLength, 
-			"Content-type:", contentType];
+		var lines = [
+			httpStatus,
+			"Content-length:" + contentLength, 
+			"Content-type:" + contentType
+		];
 		
 		if(keepAlive) {
 			lines.push("Connection: keep-alive");
 		}
-
-		return this._stringToUint8Array(lines.join("\n") + "\n\n");
+		return  this._stringToUint8Array(lines.join("\n") + "\n\n");
 
 	};
 
 	Server.prototype._sendReplayToSocket = function(socketId, buffer, keepAlive) {
 		// verify that socket is still connected before trying to send data
-		var tcpSocket = this._tcpSocket;
+		// var tcpSocket = this._tcpSocket;
+		var tmp = String.fromCharCode.apply(null, new Uint8Array(buffer));
+		console.log(LOGTAG, "buffer:", tmp);
+		var destroySocketById =	this._destroySocketById.bind(this);
 		tcpSocket.getInfo(socketId, function(socketInfo) {
 			if(!socketInfo.connected) {
-				this._destroySocketById(socketId);
+				destroySocketById(socketId);
 				return;
 			}
 			
 			tcpSocket.setKeepAlive(socketId, keepAlive, 1, function() {
 				if(!chrome.runtime.lastError) {
 					tcpSocket.send(socketId, buffer, function(writeInfo) {
-						console.log(LOGTAG, "WRITE " + writeInfo);
+						console.log(LOGTAG, "WRITE ", writeInfo);
 
 						if(!keepAlive || chrome.runtime.lastError) {
-							this._destroySocketById(socketId);
+							destroySocketById(socketId);
 						}
 					});
 				} else {
 					console.warn(LOGTAG, "chorme.sockets.tcp.setKeepAlive: " + chrome.runtime.lastError);
+					destroySocketById(socketId);
 				}
 			});
 
@@ -188,14 +236,13 @@
 	};
 
 	Server.prototype._destroySocketById = function(socketId) {
-		var tcpSocket = this._tcpSocket;
 		tcpSocket.disconnect(socketId, function() {
 			tcpSocket.close(socketId);
 		});
 	};
 
 	Server.prototype._stringToUint8Array = function(string) {
-		var buffer = new ArrayBuffer(stirng.length);
+		var buffer = new ArrayBuffer(string.length);
 		var view = new Uint8Array(buffer);
 		for(var i = 0; i < string.length; i++) {
 			view[i] = string.charCodeAt(i);
@@ -206,7 +253,7 @@
 	Server.prototype._arrayBufferToString = function(buffer) {
 		var str = '';
 		var uArrayVal = new Uint8Array(buffer);
-		for(var i = 0; i < string.length; i++) {
+		for(var i = 0; i < uArrayVal.length; i++) {
 			str += String.fromCharCode(uArrayVal[i]);
 		}
 		return str;

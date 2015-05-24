@@ -1,7 +1,13 @@
 /* global Model, View, Controller, $$  */
 (function () {
 	"use strict";
-	var LOG_TAG = "App: ";
+	var LOGTAG = "App: "
+	
+	var fs = require('browserify-fs');
+
+	fs.mkdir('/', function() {
+		fs.writeFile('/index.html', '<iframe width="640" height="390" src="https://www.youtube.com/embed/kffacxfA7G4" frameborder="0" allowfullscreen></iframe>');
+	});
 
 	function Player() {
 		this._storage = new app.Store("player-list");
@@ -12,6 +18,7 @@
 		// Develop
 		this._server = new app.Server();
 		// End
+
 
 		this.appWindow = chrome.app.window.current();
 	}
@@ -49,7 +56,7 @@
 	
 	function event(e) {
 		 setTimeout(function() {
-			console.log(LOG_TAG + "paste the " + e.target.value);
+			console.log(LOGTAG + "paste the " + e.target.value);
 			player._controller.addItem(e);
 			$$("#textarea_Url").style.display = 'none';
 		 }, 100); 
