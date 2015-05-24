@@ -46,7 +46,7 @@
 		this.serverSocketId = createInfo.socketId;
 		if(this.serverSocketId > 0) {
 			tcpServer.onAccept.addListener(this._onAccept.bind(this));
-			tcpServer.listen(this.serverSocketId, '127.0.0.1', 5566, 50, this._onListenComplete.bind(this));
+			tcpServer.listen(this.serverSocketId, '127.0.0.1', 8080, 50, this._onListenComplete.bind(this));
 		} else {
 			console.log(LOGTAG, 'error', 'Unable to create socket');
 		}
@@ -144,8 +144,10 @@
 
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
-			console.log(LOGTAG, "e", e.target.result);
-			view.set(new Uint8Array(e.target.resutl), header.byteLength);
+			var strE = String.fromCharCode.apply(null, new Uint8Array(e.target.result));
+			console.log(LOGTAG, "e", strE);
+			console.log(LOGTAG, 'header.byteLength', header.byteLength);
+			view.set(new Uint8Array(e.target.result), header.byteLength);
 			console.log(LOGTAG, 'view', view);
 			var tmp = String.fromCharCode.apply(null, new Uint8Array(outputBuffer));
 			console.log(LOGTAG, 'data', tmp);
@@ -153,10 +155,10 @@
 		}.bind(this);
 		console.log(LOGTAG, 'file ' , file);
 		var aFileParts = [file];
-		var blob = new Blob(aFileParts, {type: 'text/plain'});
-		var output = new File([blob], 'index.html', {type: 'text/plain'});
+		var blob = new Blob(aFileParts, {type: 'text/html'});
+		var output = new File([blob], 'index.html', {type: 'text/html'});
 		// fileReader.readAsArrayBuffer(output);
-		fileReader.readAsText(blob);
+		fileReader.readAsArrayBuffer(output);
 	};
 
 	Server.prototype._writeErrorResponse = function(socketId, errorCode, keepAlive) {
@@ -182,7 +184,7 @@
 
 	Server.prototype._getResponseHeader = function(file, errorCode, keepAlive) {
 		var httpStatus = "HTTP/1.0 200 OK";
-		var contentType = "text/plain";
+		var contentType = "text/html";
 		var contentLength = 0;
 		
 		if(!file || errorCode) {
