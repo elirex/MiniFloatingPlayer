@@ -3,8 +3,9 @@ body {
 }
 #textarea_Url {
 	border: 0;
-	width: 100vw ;
-	height: 100vh;
+	margin-top: 16px;
+	margin-left: 200px;
+	width: 65vw;
 	resize: none;
 	font-size: 20pt;
 }
