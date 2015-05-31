@@ -7,9 +7,8 @@
 	var tcpServer = chrome.sockets.tcpServer;
 	var tcpSocket = chrome.sockets.tcp;
 	var filelist;
+
 	function Server() {
-		// this._tcpServer = chrome.sockets.tcpServer;
-		// this._tcpSocket = chrome.sockets.tcp;
 		this._serverSocketId = null;
 		this._filesMap = {};
 
@@ -122,7 +121,13 @@
 			uri = uri.substring(0, q);
 		}
 		// var file = this._filesMap[uri];
-		fs.readFile('/index.html', 'utf-8', function(err, data) {
+		console.log(LOGTAG, "Requests: " + uri);
+		// fs.readFile('/index.html', 'utf-8', function(err, data) {
+		// 	console.log(data);
+		// 	this._write200Response(socketId, data, keepAlive);
+		// }.bind(this));
+		var url = '/' + uri;
+		fs.readFile(url, 'utf-8', function(err, data) {
 			console.log(data);
 			this._write200Response(socketId, data, keepAlive);
 		}.bind(this));
@@ -156,9 +161,7 @@
 		console.log(LOGTAG, 'file ' , file);
 		var aFileParts = [file];
 		var blob = new Blob(aFileParts, {type: 'text/html'});
-		var output = new File([blob], 'index.html', {type: 'text/html'});
-		// fileReader.readAsArrayBuffer(output);
-		fileReader.readAsArrayBuffer(output);
+		fileReader.readAsArrayBuffer(blob);
 	};
 
 	Server.prototype._writeErrorResponse = function(socketId, errorCode, keepAlive) {

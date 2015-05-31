@@ -2,6 +2,8 @@
 	"use strict"
 	
 	var LOG_TAG = "Model: ";
+	
+	var fs = require('browserify-fs');
 
 	/**
 	 * Create a new Model instance.
@@ -27,6 +29,15 @@
 		// var xmlHttp = this._xmlHttp;
 		// console.log(LOG_TAG + "In parse function xmlHttp=" + xmlHttp);
 		// EndDebug
+		var fileName = '/' + matched[2] + '.html';
+		var srcURL = '"https://www.youtube.com/embed/' + matched[2] + '?autoplay=1&showinfo=0&enablejsapi=1&version=3&autohide=1"';
+		var content = '<!DOCTYPE html>' +
+					'<html>'+
+					'<body style="margin-left:-1px; margin-top:-1px;"><iframe  allowtransparency="true" style="background: black" width="640" height="390" src=' + srcURL + ' framborder="0"></iframe>' +
+					'</body></html>';
+		fs.mkdir('/', function() {
+			fs.writeFile(fileName, content);
+		});
 		
 		this._requestVideoInfo(matched[2], callback);
 	}

@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Player",
-	"version": "0.1",
+	"version": "0.0.1",
 	"description": "This is chrome app that can watch youtube video at another window.",
 	"permissions": [
 		"alwaysOnTopWindows",

@@ -3,11 +3,11 @@
 	"use strict";
 	var LOGTAG = "App: "
 	
-	var fs = require('browserify-fs');
+	// var fs = require('browserify-fs');
 
-	fs.mkdir('/', function() {
-		fs.writeFile('/index.html', '<iframe width="640" height="390" src="https://www.youtube.com/embed/kffacxfA7G4" frameborder="0" allowfullscreen></iframe>');
-	});
+	// fs.mkdir('/', function() {
+	// 	fs.writeFile('/index.html', '<iframe width="640" height="390" src="https://www.youtube.com/embed/kffacxfA7G4" frameborder="0" allowfullscreen></iframe>');
+	// });
 
 	function Player() {
 		this._storage = new app.Store("player-list");
@@ -31,25 +31,26 @@
 	$$("#textarea_Url").addEventListener("paste", event);	
 	$$("#textarea_Url").addEventListener("drop", event);
 	$$("#btn-close").addEventListener("click", onClickClose);
-	$$("#btn-fullscreen").addEventListener("click", onClickFullScreen);
+	// $$("#btn-fullscreen").addEventListener("click", onClickFullScreen);
+	$$("#btn-ontop").addEventListener("click", onClickOnTop);
 	$$("#body").addEventListener("mousemove", onMouseMove);
 	
-	var btnAppAction = $$("#btn-app-action");
+	// var btnAppAction = $$("#btn-app-action");
 	var btnWindowAction = $$("#btn-window-action");
 	var timeout = null;
 
 	function clearHide() {
 		setTimeout(function() {
 			clearTimeout(timeout);
-		}, 50);
+		}, 30);
 	}
 
 	function onMouseMove() {
-		btnAppAction.style.display = 'block';
+		// btnAppAction.style.display = 'block';
 		btnWindowAction.style.display = 'block';
 		clearTimeout(timeout);
 		timeout = setTimeout(function () {
-			btnAppAction.style.display = 'none';
+			// btnAppAction.style.display = 'none';
 			btnWindowAction.style.display = 'none';
 		}, 1500);
 	}
@@ -63,27 +64,40 @@
 	}
 
 	function onClickClose() {
-		var isFullscreen = player.appWindow.isFullscreen();
-		if(isFullscreen) {
-			player.appWindow.restore();
-			setTimeout(function() {
-				player.appWindow.close();
-			}, 1000);
+		// var isFullscreen = player.appWindow.isFullscreen();
+		// if(isFullscreen) {
+		// 	player.appWindow.restore();
+		// 	setTimeout(function() {
+		// 		player.appWindow.close();
+		// 	}, 1000);
+		// } else {
+		// 	player.appWindow.close();
+		// }
+		player.appWindow.close();
+	}
+
+	function onClickOnTop() {
+		var isOnTop = player.appWindow.isAlwaysOnTop();
+		var icon = $$("#btn-lock-icon");
+		if(isOnTop) {
+			player.appWindow.setAlwaysOnTop(false);
+			icon.className = "large mdi-action-lock-open";
 		} else {
-			player.appWindow.close();
+			player.appWindow.setAlwaysOnTop(true);
+			icon.className = "large mdi-action-lock";
 		}
 	}
 
-	function onClickFullScreen() {
-		var isFullscreen = player.appWindow.isFullscreen();
-		var icon = $$("#btn-fullscreen-icon");
-		if(isFullscreen) {
-			player.appWindow.restore();
-			icon.className = "large mdi-content-add";
-		} else {
-			player.appWindow.fullscreen();
-			icon.className = "large mdi-content-remove";
-		}
-	}
+	// function onClickFullScreen() {
+	// 	var isFullscreen = player.appWindow.isFullscreen();
+	// 	var icon = $$("#btn-fullscreen-icon");
+	// 	if(isFullscreen) {
+	// 		player.appWindow.restore();
+	// 		icon.className = "large mdi-content-add";
+	// 	} else {
+	// 		player.appWindow.fullscreen();
+	// 		icon.className = "large mdi-content-remove";
+	// 	}
+	// }
 
 })();

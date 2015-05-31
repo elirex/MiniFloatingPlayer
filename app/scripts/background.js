@@ -3,8 +3,8 @@ chrome.app.runtime.onLaunched.addListener(launch);
 var LOG_TAG = 'background ';
 var screenWidth = screen.availWidth;
 var screenHeigh = screen.availHeight;
-var width = 600;
-var height = 390;
+var width = 643;
+var height = 393;
 
 function launch() {
 	chrome.app.window.create('index.html', {
