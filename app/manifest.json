@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "Player",
-	"version": "0.0.1",
-	"description": "This is chrome app that can watch youtube video at another window.",
+	"name": "Floating Player",
+	"version": "1.0.0",
+	"description": "This APP let you watch a youtube video at the floating window.",
 	"permissions": [
 		"alwaysOnTopWindows",
 		"webview",
