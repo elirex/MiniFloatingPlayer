@@ -2,12 +2,6 @@
 (function () {
 	"use strict";
 	var LOGTAG = "App: "
-	
-	// var fs = require('browserify-fs');
-
-	// fs.mkdir('/', function() {
-	// 	fs.writeFile('/index.html', '<iframe width="640" height="390" src="https://www.youtube.com/embed/kffacxfA7G4" frameborder="0" allowfullscreen></iframe>');
-	// });
 
 	function Player() {
 		this._storage = new app.Store("player-list");
@@ -28,8 +22,8 @@
 
 
 
-	$$("#textarea_Url").addEventListener("paste", event);	
-	$$("#textarea_Url").addEventListener("drop", event);
+	// $$("#textarea_Url").addEventListener("paste", event);	
+	// $$("#textarea_Url").addEventListener("drop", event);
 	$$("#btn-close").addEventListener("click", onClickClose);
 	// $$("#btn-fullscreen").addEventListener("click", onClickFullScreen);
 	$$("#btn-ontop").addEventListener("click", onClickOnTop);
@@ -37,6 +31,10 @@
 	
 	// var btnAppAction = $$("#btn-app-action");
 	var btnWindowAction = $$("#btn-window-action");
+	var inputArea = $$("#input-area");
+	var inputAction = $$("#input-action");
+	inputArea.addEventListener("paste", event);
+	inputArea.addEventListener("drop", event);
 	var timeout = null;
 
 	function clearHide() {
@@ -48,10 +46,14 @@
 	function onMouseMove() {
 		// btnAppAction.style.display = 'block';
 		btnWindowAction.style.display = 'block';
+		// $$("#textarea_Url").style.display = 'block';
+		inputAction.style.display = 'block';
 		clearTimeout(timeout);
 		timeout = setTimeout(function () {
 			// btnAppAction.style.display = 'none';
 			btnWindowAction.style.display = 'none';
+			inputAction.style.display = 'none';
+			// $$("#textarea_Url").style.display = 'none';
 		}, 1500);
 	}
 	
@@ -59,7 +61,8 @@
 		 setTimeout(function() {
 			console.log(LOGTAG + "paste the " + e.target.value);
 			player._controller.addItem(e);
-			$$("#textarea_Url").style.display = 'none';
+			// $$("#textarea_Url").style.display = 'none';
+			inputArea.value = '';
 		 }, 100); 
 	}
 

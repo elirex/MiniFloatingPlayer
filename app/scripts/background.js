@@ -4,7 +4,7 @@ var LOG_TAG = 'background ';
 var screenWidth = screen.availWidth;
 var screenHeigh = screen.availHeight;
 var width = 643;
-var height = 393;
+var height = 395;
 
 function launch() {
 	chrome.app.window.create('index.html', {

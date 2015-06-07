@@ -37,7 +37,7 @@
 
 	/* The public methods */
 	Server.prototype.createServerSocket = function() {
-		console.log(LOGTAG, "this._filesMap", this._filesMap);
+		// console.log(LOGTAG, "this._filesMap", this._filesMap);
 		tcpServer.create({}, this._onCreate.bind(this));
 	};
 
@@ -120,15 +120,9 @@
 		if(q != -1) {
 			uri = uri.substring(0, q);
 		}
-		// var file = this._filesMap[uri];
 		console.log(LOGTAG, "Requests: " + uri);
-		// fs.readFile('/index.html', 'utf-8', function(err, data) {
-		// 	console.log(data);
-		// 	this._write200Response(socketId, data, keepAlive);
-		// }.bind(this));
 		var url = '/' + uri;
 		fs.readFile(url, 'utf-8', function(err, data) {
-			console.log(data);
 			this._write200Response(socketId, data, keepAlive);
 		}.bind(this));
 		// console.log(LOGTAG, 'file=' + file);
@@ -150,15 +144,10 @@
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
 			var strE = String.fromCharCode.apply(null, new Uint8Array(e.target.result));
-			console.log(LOGTAG, "e", strE);
-			console.log(LOGTAG, 'header.byteLength', header.byteLength);
 			view.set(new Uint8Array(e.target.result), header.byteLength);
-			console.log(LOGTAG, 'view', view);
 			var tmp = String.fromCharCode.apply(null, new Uint8Array(outputBuffer));
-			console.log(LOGTAG, 'data', tmp);
 			this._sendReplayToSocket(socketId, outputBuffer, keepAlive);
 		}.bind(this);
-		console.log(LOGTAG, 'file ' , file);
 		var aFileParts = [file];
 		var blob = new Blob(aFileParts, {type: 'text/html'});
 		fileReader.readAsArrayBuffer(blob);

@@ -1,11 +1,15 @@
 body {
 	margin: 0px;
+	height: 393px;
 }
-#textarea_Url {
+#input-area {
 	border: 0;
-	margin-top: 16px;
-	margin-left: 200px;
 	width: 65vw;
 	resize: none;
-	font-size: 20pt;
+	font-size: 8pt;
+}
+
+#input-action {
+	margin-top: 16px;
+	margin-left: 200px;
 }

@@ -8,6 +8,7 @@
 		var dbName;
 
 		dbName = this._dbName = name;
+		
 
 		callback = callback || function() {};
 
