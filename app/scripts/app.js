@@ -8,34 +8,50 @@
 		this._model = new app.Model(this._storage);
 		this._view = new app.View();
 		this._controller = new app.Controller(this._model, this._view);
-		
-		// Develop
 		this._server = new app.Server();
-		// End
 
 
 		this.appWindow = chrome.app.window.current();
 	}
 
 	var player = new Player();
-	player._server.createServerSocket();
 
 
 
-	// $$("#textarea_Url").addEventListener("paste", event);	
-	// $$("#textarea_Url").addEventListener("drop", event);
 	$$("#btn-close").addEventListener("click", onClickClose);
 	// $$("#btn-fullscreen").addEventListener("click", onClickFullScreen);
 	$$("#btn-ontop").addEventListener("click", onClickOnTop);
 	$$("#body").addEventListener("mousemove", onMouseMove);
+	$$("body").addEventListener("keydown", onKeyDown);
 	
-	// var btnAppAction = $$("#btn-app-action");
+	var btnAppAction = $$("#btn-app-action");
+	var btnHistory = $$("#btn-history");
 	var btnWindowAction = $$("#btn-window-action");
 	var inputArea = $$("#input-area");
 	var inputAction = $$("#input-action");
+	var cardHistoryView = $$("#history-view");
 	inputArea.addEventListener("paste", event);
 	inputArea.addEventListener("drop", event);
 	var timeout = null;
+
+	btnHistory.addEventListener("click", onClickHistory);
+
+	cardHistoryView.addEventListener("click", function(e) {
+		var target = e.target;
+		console.log(LOGTAG, "target", target, target.id);
+		$$("#webview").innerHTML = player._view.show(target.id);
+		cardHistoryView.style.display = 'none';
+	})
+
+	function onKeyDown(e) {
+		if(e.keyCode == 27) {
+			var isShow = cardHistoryView.style.display;
+			if(isShow == 'block') {
+				cardHistoryView.style.display = 'none';
+			}
+		}
+	}
+
 
 	function clearHide() {
 		setTimeout(function() {
@@ -43,27 +59,37 @@
 		}, 30);
 	}
 
+
 	function onMouseMove() {
-		// btnAppAction.style.display = 'block';
+		btnAppAction.style.display = 'block';
 		btnWindowAction.style.display = 'block';
-		// $$("#textarea_Url").style.display = 'block';
 		inputAction.style.display = 'block';
+
 		clearTimeout(timeout);
 		timeout = setTimeout(function () {
-			// btnAppAction.style.display = 'none';
+			btnAppAction.style.display = 'none';
 			btnWindowAction.style.display = 'none';
 			inputAction.style.display = 'none';
-			// $$("#textarea_Url").style.display = 'none';
 		}, 1500);
 	}
 	
 	function event(e) {
 		 setTimeout(function() {
 			console.log(LOGTAG + "paste the " + e.target.value);
+			cardHistoryView.style.display = 'none';
 			player._controller.addItem(e);
-			// $$("#textarea_Url").style.display = 'none';
 			inputArea.value = '';
 		 }, 100); 
+	}
+
+
+	function onClickHistory() {
+		var isShow = cardHistoryView.style.display;
+		if(isShow == 'block') {
+			cardHistoryView.style.display = 'none';
+		} else {
+			cardHistoryView.style.display = 'block';
+		}
 	}
 
 	function onClickClose() {

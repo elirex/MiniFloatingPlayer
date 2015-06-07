@@ -19,23 +19,25 @@
 		</div>
 		<form class="col s12">
 			<div class="row">
-			<div id="input-action"class="input-field col s6">
-				<input id="input-area" class="validate" type="text">
-				<label for="textareal">URL Area</label>
+				<div id="input-action"class="input-field col s6">
+					<input id="input-area" class="validate" type="text">
+					<label for="textareal">URL Area</label>
+				</div>
 			</div>
-		</div>
 		</form>
-		<!-- <div id="btn-app-action" class="fixed-action-btn" style="bottom: 40px; right: 16px; display: none">
+		<div class="left" id="history-view" style="position: fixed; top: 75px; height:300px;overflow:auto; display:block">
+		</div>
+		<div id="btn-app-action" class="fixed-action-btn" style="bottom: 40px; right: 16px; display: none">
 			<a class="btn-floating btn-large red">
 				<i class="large mdi-editor-mode-edit"></i>
 			</a>
 			<ul>
-				<li><a class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
+				<li><a id="btn-history" class="btn-floating green darken-4"><i class="large mdi-editor-insert-chart"></i></a></li>
 				<li><a class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
 				<li><a class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
 				<li><a class="btn-floating red"><i class="large mdi-editor-insert-chart"></i></a></li>
 			</ul>
-		</div> -->
+		</div>
 		<script src="jquery/jquery-2.1.1.min.js"></script>
 		<script src="libs/materialize/scripts/materialize.min.js"></script>
 		<script src="components/director/build/director.js"></script>

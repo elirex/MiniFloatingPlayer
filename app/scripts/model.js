@@ -40,10 +40,11 @@
 					+ ' src=' + srcURL + ' framborder="0"></iframe>' 
 					+ '</body></html>';
 		fs.mkdir('/', function() {
-			fs.writeFile(fileName, content);
-		});
+			fs.writeFile(fileName, content, function() {
+				this._requestVideoInfo(matched[2], callback);
+			}.bind(this));
+		}.bind(this));
 		
-		this._requestVideoInfo(matched[2], callback);
 	}
 	 
 	// Request youtube video information
@@ -65,13 +66,14 @@
 		 		var videoInfo = {
 		 			id: obj.items[0].id,
 		 			title: obj.items[0].snippet.title,
-		 			description: obj.items[0].snippet.description
+		 			description: obj.items[0].snippet.description,
+					image: obj.items[0].snippet.thumbnails.medium.url
 		 		};
 		 		// console.log(LOG_TAG + "JSON: ", obj.items[0].id + " " 
 				// 			+ obj.items[0].snippet.title + " "
 				// 		   + obj.items[0].snippet.description);
 		 		storage.save(videoInfo);
-				storage.find();
+				// storage.find();
 		 	}
 		}
 
@@ -79,6 +81,11 @@
 		if(callback) {
 			callback(id);
 		}
+	}
+
+	Model.prototype.read = function(callback) {
+		callback = callback || function () {};
+		return this._storage.find(callback);
 	}
 
 	// Export to window

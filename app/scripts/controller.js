@@ -15,6 +15,12 @@
 		this._model = model;
 		this._view = view;
 		this.$webview = $$('#webview');
+		this.$historyview = $$('#history-view');
+		
+		window.addEventListener('load', function() {
+			this.showHistory();
+		}.bind(this));
+
 	}
     
 	Controller.prototype.addItem = function(e) {
@@ -26,6 +32,15 @@
 
 	Controller.prototype._playVideo = function(data) {
 		this.$webview.innerHTML = this._view.show(data)
+	}
+
+	Controller.prototype.showHistory = function() {
+		this._model.read(function(data) {
+			this.$historyview.innerHTML = this._view.showHistory(data);
+		}.bind(this));
+		// this.model.read(function(data) {
+		// 	
+		// }.bind(this));
 	}
 
 

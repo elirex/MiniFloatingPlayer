@@ -6,7 +6,6 @@
 	"permissions": [
 		"alwaysOnTopWindows",
 		"webview",
-		"http://gdata.youtube.com/*",
 		"storage",
 		"fullscreen",
 		"system.network"

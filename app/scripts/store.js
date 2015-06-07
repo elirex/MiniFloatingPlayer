@@ -65,9 +65,12 @@
 		chrome.storage.local.get(this._dbName, function(storage) {
 			var videos = storage[this._dbName] && storage[this._dbName].videos || [ ];
 
-			for(var i = 0; i < videos.length; i++) {
-				console.log(LOG_TAG + "id:" + videos[i].id + " title:" + videos[i].title + " description:" + videos[i].description);
-			}
+			// for(var i = 0; i < videos.length; i++) {
+			// 	console.log(LOG_TAG + "id:" + videos[i].id 
+			// 				+ " title:" + videos[i].title 
+			// 				+ " description:" + videos[i].description
+			// 			    + "image:" + videos[i].image);
+			// }
 
 			callback.call(this, videos);
 		}.bind(this));

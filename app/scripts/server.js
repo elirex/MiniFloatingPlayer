@@ -16,23 +16,8 @@
 			filelist = files;
 			console.log(LOGTAG, 'files:', filelist);
 		});
-		// chrome.system.network.getNetworkInterfaces(function(interfaces) {
-		// 	for(var i in interfaces) {
-		// 		var subInterface = interfaces[i];
-		// 		console.log(LOGTAG + "Inferface: name=" + subInterface.name + " ip=" + subInterface.address);
-		// 	}
-		// });
 
-		// Chrome file system example
-		// chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function(theEntry) {
-		// 	if(!theEntry) {
-		// 		console.log(LOGTAG, 'No Directory');
-		// 		return;
-		// 	}
-		// 	console.log(LOGTAG, theEntry);
-		// });
-		
-
+		this.createServerSocket();
 	}
 
 	/* The public methods */
@@ -45,7 +30,8 @@
 		this.serverSocketId = createInfo.socketId;
 		if(this.serverSocketId > 0) {
 			tcpServer.onAccept.addListener(this._onAccept.bind(this));
-			tcpServer.listen(this.serverSocketId, '127.0.0.1', 8080, 50, this._onListenComplete.bind(this));
+			tcpServer.listen(this.serverSocketId, '127.0.0.1', 8080, 50
+					, this._onListenComplete.bind(this));
 		} else {
 			console.log(LOGTAG, 'error', 'Unable to create socket');
 		}
@@ -53,7 +39,8 @@
 
 	Server.prototype._onListenComplete = function(resultCode) {
 		if(resultCode !== 0) {
-			console.log(LOGTAG, 'error', 'Unable to listen to socket. Resultcode=' + resultCode);
+			console.log(LOGTAG, 'error', 'Unable to listen to socket.' 
+						+ ' Resultcode=' + resultCode);
 		} else {
 			tcpSocket.onReceive.addListener(this._onReceive.bind(this));
 		}
@@ -66,7 +53,8 @@
 		if(this.serverSocketId) {
 			tcpServer.close(this.serverSocketId, function() {
 				if(chrome.runtime.lastError) {
-					console.warn(LOGTAG, "chrome.sockets.tcpServer.close: " + chrome.runtime.lastError);
+					console.warn(LOGTAG, "chrome.sockets.tcpServer.close: " 
+								 + chrome.runtime.lastError);
 				}
 			});
 		}
@@ -143,9 +131,11 @@
 
 		var fileReader = new FileReader();
 		fileReader.onload = function(e) {
-			var strE = String.fromCharCode.apply(null, new Uint8Array(e.target.result));
+			var strE = String.fromCharCode.apply(null
+				, new Uint8Array(e.target.result));
 			view.set(new Uint8Array(e.target.result), header.byteLength);
-			var tmp = String.fromCharCode.apply(null, new Uint8Array(outputBuffer));
+			var tmp = String.fromCharCode.apply(null
+				, new Uint8Array(outputBuffer));
 			this._sendReplayToSocket(socketId, outputBuffer, keepAlive);
 		}.bind(this);
 		var aFileParts = [file];
@@ -153,7 +143,8 @@
 		fileReader.readAsArrayBuffer(blob);
 	};
 
-	Server.prototype._writeErrorResponse = function(socketId, errorCode, keepAlive) {
+	Server.prototype._writeErrorResponse = function(socketId, errorCode
+			, keepAlive) {
 		console.log(LOGTAG, "writeErrorResponse: begin...");
 		var header = this._getErrorHeader(errorCode, keepAlive);
 		console.info(LOGTAG, "writeErrorResponse: Done setting header...");
@@ -174,7 +165,8 @@
 		return this._getResponseHeader(null, errorCode, keepAlive);
 	};
 
-	Server.prototype._getResponseHeader = function(file, errorCode, keepAlive) {
+	Server.prototype._getResponseHeader = function(file, errorCode
+		, keepAlive) {
 		var httpStatus = "HTTP/1.0 200 OK";
 		var contentType = "text/html";
 		var contentLength = 0;
@@ -199,7 +191,8 @@
 
 	};
 
-	Server.prototype._sendReplayToSocket = function(socketId, buffer, keepAlive) {
+	Server.prototype._sendReplayToSocket = function(socketId, buffer
+		, keepAlive) {
 		// verify that socket is still connected before trying to send data
 		// var tcpSocket = this._tcpSocket;
 		var tmp = String.fromCharCode.apply(null, new Uint8Array(buffer));
@@ -221,7 +214,8 @@
 						}
 					});
 				} else {
-					console.warn(LOGTAG, "chorme.sockets.tcp.setKeepAlive: " + chrome.runtime.lastError);
+					console.warn(LOGTAG, "chorme.sockets.tcp.setKeepAlive: " 
+								 + chrome.runtime.lastError);
 					destroySocketById(socketId);
 				}
 			});
