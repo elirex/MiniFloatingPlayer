@@ -30,17 +30,19 @@
 	var inputArea = $$("#input-area");
 	var inputAction = $$("#input-action");
 	var cardHistoryView = $$("#history-view");
-	inputArea.addEventListener("paste", event);
-	inputArea.addEventListener("drop", event);
 	var timeout = null;
 
+	inputArea.addEventListener("paste", event);
+	inputArea.addEventListener("drop", event);
 	btnHistory.addEventListener("click", onClickHistory);
 
 	cardHistoryView.addEventListener("click", function(e) {
 		var target = e.target;
 		console.log(LOGTAG, "target", target, target.id);
-		$$("#webview").innerHTML = player._view.show(target.id);
-		cardHistoryView.style.display = 'none';
+		if(target.id !== 'history-view' && target.id !== "") {
+			$$("#webview").innerHTML = player._view.show(target.id);
+			cardHistoryView.style.display = 'none';
+		}
 	})
 
 	function onKeyDown(e) {
@@ -88,6 +90,7 @@
 		if(isShow == 'block') {
 			cardHistoryView.style.display = 'none';
 		} else {
+			player._controller.showHistory();
 			cardHistoryView.style.display = 'block';
 		}
 	}
@@ -102,6 +105,7 @@
 		// } else {
 		// 	player.appWindow.close();
 		// }
+		player._server.closeServerSocket();
 		player.appWindow.close();
 	}
 
