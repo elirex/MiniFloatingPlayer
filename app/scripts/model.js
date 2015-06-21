@@ -15,6 +15,7 @@
 	function Model(storage) {
 		this._xmlHttp = new XMLHttpRequest();
 		this._storage = storage;
+		this._historyData;
 	}
 
 	Model.prototype.parse = function(data, callback) {
@@ -49,34 +50,49 @@
 	 
 	// Request youtube video information
 	Model.prototype._requestVideoInfo = function(id, callback) {
-		var url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet' 
-				+ '&id=' + id 
-				+ '&key=AIzaSyDpr3gbwjKop-ataKjaOlMYs-Z0XyOzAmM';
-		console.log(LOG_TAG + "Request " + id + " information URL: " + url);	
-		var xmlHttp = this._xmlHttp;
-		xmlHttp.open("GET", url, true);
-		xmlHttp.send();
 		var storage = this._storage;
-		xmlHttp.onreadystatechange = function() {
-		 	console.log(LOG_TAG + "xmlHttp.status=" + xmlHttp.status 
-						+ ", xmlHttp.readyState=" + xmlHttp.readyState);
-		 	if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-		 		var obj = JSON.parse(xmlHttp.responseText);
+		storage.find(function(data) {
+			var length = data.length;
+			var isHasInfo = false;
+			for(var i = 0; i < length; i++) {
+				if(data[i].id === id) {
+					isHasInfo = true;
+					break;
+				}
+			}
 
-		 		var videoInfo = {
-		 			id: obj.items[0].id,
-		 			title: obj.items[0].snippet.title,
-		 			description: obj.items[0].snippet.description,
-					image: obj.items[0].snippet.thumbnails.medium.url
-		 		};
-		 		// console.log(LOG_TAG + "JSON: ", obj.items[0].id + " " 
-				// 			+ obj.items[0].snippet.title + " "
-				// 		   + obj.items[0].snippet.description);
-		 		storage.save(videoInfo);
-				// storage.find();
-		 	}
-		}
+			if(isHasInfo === false) {
+				var url = 'https://www.googleapis.com/youtube/v3/videos?' 
+						+ 'part=snippet' 
+						+ '&id=' + id 
+						+ '&key=AIzaSyDpr3gbwjKop-ataKjaOlMYs-Z0XyOzAmM';
+				console.log(LOG_TAG + "Request " + id + " information URL: " 
+							+ url);	
+				var xmlHttp = this._xmlHttp;
+				xmlHttp.open("GET", url, true);
+				xmlHttp.send();
+				xmlHttp.onreadystatechange = function() {
+					console.log(LOG_TAG + "xmlHttp.status=" + xmlHttp.status 
+								+ ", xmlHttp.readyState=" + xmlHttp.readyState);
+					if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+						var obj = JSON.parse(xmlHttp.responseText);
 
+						var videoInfo = {
+							id: obj.items[0].id,
+							title: obj.items[0].snippet.title,
+							description: obj.items[0].snippet.description,
+							image: obj.items[0].snippet.thumbnails.medium.url
+						};
+						// console.log(LOG_TAG + "JSON: ", obj.items[0].id + " " 
+						// 			+ obj.items[0].snippet.title + " "
+						// 		   + obj.items[0].snippet.description);
+						storage.save(videoInfo);
+						// storage.find();
+					}
+				}
+			}
+		}.bind(this));
+	
 		
 		if(callback) {
 			callback(id);

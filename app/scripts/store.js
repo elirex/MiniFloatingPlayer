@@ -63,7 +63,8 @@
 	Store.prototype.find = function(callback) {
 		callback = callback || function() {};
 		chrome.storage.local.get(this._dbName, function(storage) {
-			var videos = storage[this._dbName] && storage[this._dbName].videos || [ ];
+			var videos = storage[this._dbName] && 
+				storage[this._dbName].videos || [ ];
 
 			// for(var i = 0; i < videos.length; i++) {
 			// 	console.log(LOG_TAG + "id:" + videos[i].id 

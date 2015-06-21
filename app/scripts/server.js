@@ -108,7 +108,7 @@
 		if(q != -1) {
 			uri = uri.substring(0, q);
 		}
-		console.log(LOGTAG, "Requests: " + uri);
+		// console.log(LOGTAG, "Requests: " + uri);
 		var url = '/' + uri;
 		fs.readFile(url, 'utf-8', function(err, data) {
 			this._write200Response(socketId, data, keepAlive);
@@ -121,7 +121,6 @@
 		// }
 		// this._write200Response(socketId, file, this._keepAlive);
 	};
-
 
 	Server.prototype._write200Response = function(socketId, file, keepAlive) {
 		var header = this._getSuccessHeader(file, keepAlive);
@@ -196,7 +195,7 @@
 		// verify that socket is still connected before trying to send data
 		// var tcpSocket = this._tcpSocket;
 		var tmp = String.fromCharCode.apply(null, new Uint8Array(buffer));
-		console.log(LOGTAG, "buffer:", tmp);
+		// console.log(LOGTAG, "buffer:", tmp);
 		var destroySocketById =	this._destroySocketById.bind(this);
 		tcpSocket.getInfo(socketId, function(socketInfo) {
 			if(!socketInfo.connected) {

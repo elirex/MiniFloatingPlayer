@@ -16,16 +16,15 @@
 
 	var player = new Player();
 
-
-
 	$$("#btn-close").addEventListener("click", onClickClose);
 	// $$("#btn-fullscreen").addEventListener("click", onClickFullScreen);
 	$$("#btn-ontop").addEventListener("click", onClickOnTop);
 	$$("#body").addEventListener("mousemove", onMouseMove);
 	$$("body").addEventListener("keydown", onKeyDown);
 	
-	var btnAppAction = $$("#btn-app-action");
-	var btnHistory = $$("#btn-history");
+	// var btnAppAction = $$("#btn-app-action");
+	// var btnHistory = $$("#btn-history");
+	var btnHistory = $$("#btn-app-action");
 	var btnWindowAction = $$("#btn-window-action");
 	var inputArea = $$("#input-area");
 	var inputAction = $$("#input-action");
@@ -54,22 +53,22 @@
 		}
 	}
 
-
 	function clearHide() {
 		setTimeout(function() {
 			clearTimeout(timeout);
 		}, 30);
 	}
 
-
 	function onMouseMove() {
-		btnAppAction.style.display = 'block';
+		// btnAppAction.style.display = 'block';
+		btnHistory.style.display = 'block';
 		btnWindowAction.style.display = 'block';
 		inputAction.style.display = 'block';
 
 		clearTimeout(timeout);
 		timeout = setTimeout(function () {
-			btnAppAction.style.display = 'none';
+			// btnAppAction.style.display = 'none';
+			btnHistory.style.display = 'none';
 			btnWindowAction.style.display = 'none';
 			inputAction.style.display = 'none';
 		}, 1500);
@@ -83,7 +82,6 @@
 			inputArea.value = '';
 		 }, 100); 
 	}
-
 
 	function onClickHistory() {
 		var isShow = cardHistoryView.style.display;

@@ -48,8 +48,6 @@
 		return view;
 	}
 
-	
-
 	// Export to window
 	window.app.View = View;
 })(window);

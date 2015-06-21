@@ -43,7 +43,6 @@
 		// }.bind(this));
 	}
 
-
 	// Export to window
 	window.app.Controller = Controller;
 })(window);
