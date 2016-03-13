@@ -1,3 +1,9 @@
+/**
+ * File name: app.js
+ * Author: Wang, Sheng Yuan (Elirex)
+ * Date: 2015-06-21
+ * Copyright 2015 Wang Sheng Yuan
+ */
 /* global Model, View, Controller, $$  */
 (function () {
 	"use strict";

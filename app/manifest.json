@@ -1,12 +1,12 @@
 {
 	"manifest_version": 2,
-	"name": "Floating Player",
-	"version": "1.0.0",
+	"name": "Floating Action Player",
+	"version": "1.0.1",
 	"description": "This APP let you watch a youtube video at the floating window.",
 	"icons": {
-		"16": "icons/luncher_16.png",
-		"48": "icons/luncher_48.png",
-		"128": "icons/luncher_128.png"
+		"16": "icons/ic_luncher_16.png",
+		"48": "icons/ic_luncher_48.png",
+		"128": "icons/ic_luncher_128.png"
 	},
 	"permissions": [
 		"alwaysOnTopWindows",
