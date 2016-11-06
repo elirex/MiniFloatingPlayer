@@ -1,6 +1,9 @@
 Mini Floating Player (Chrome app)
 ---------------------
-> Watching YouTube video on the mini floating window.
+> Watching YouTube video on the mini floating window.  
+
+[![GitHub version](http://img.shields.io/github/tag/elirex/MiniFloatingPlayer.png)](https://github.com/elirex/MiniFloatingPlayer)  
+
 
 ![image](https://github.com/elirex/MiniFloatingPlayer/blob/master/picture/p3.png)
 
