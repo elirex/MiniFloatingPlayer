@@ -1,6 +1,19 @@
-Mini Floating Player
+Mini Floating Player (Chrome app)
 ---------------------
 > Watching YouTube video on the mini floating window.
+
+![image](https://github.com/elirex/MiniFloatingPlayer/blob/master/picture/p3.png)
+
+## Setup
+1. Go to [Google API Console](https://console.developers.google.com) to create the new project and apply YouTube Data API v3 key.
+2. Clone Mini Floating Player
+```bash
+$ git clone https://github.com/elirex/MiniFloatingPlayer.git
+```
+3. In MiniFloatingPlayer/app/scripts/key.js, set your YouTube Data API v3 key.
+
+## Install Mini Floating Player to Chrome
+You can referece [google chrome develop guide](https://developer.chrome.com/apps/app_codelab_basics#developer-mode).
 
 ## LICENSE
 
