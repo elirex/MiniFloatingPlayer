@@ -10,13 +10,12 @@
 	var LOGTAG = "App: "
 
 	function Player() {
+        this._key = new app.Key();
 		this._storage = new app.Store("player-list");
-		this._model = new app.Model(this._storage);
+		this._model = new app.Model(this._storage, this._key);
 		this._view = new app.View();
 		this._controller = new app.Controller(this._model, this._view);
 		this._server = new app.Server();
-
-
 		this.appWindow = chrome.app.window.current();
 	}
 

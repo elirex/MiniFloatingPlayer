@@ -18,10 +18,11 @@
 	 *
 	 */
 
-	function Model(storage) {
+	function Model(storage, key) {
 		this._xmlHttp = new XMLHttpRequest();
 		this._storage = storage;
 		this._historyData;
+        this._key = key;
 	}
 
 	Model.prototype.parse = function(data, callback) {
@@ -57,6 +58,7 @@
 	// Request youtube video information
 	Model.prototype._requestVideoInfo = function(id, callback) {
 		var storage = this._storage;
+        var key = this._key;
 		storage.find(function(data) {
 			var length = data.length;
 			var isHasInfo = false;
@@ -71,7 +73,8 @@
 				var url = 'https://www.googleapis.com/youtube/v3/videos?' 
 						+ 'part=snippet' 
 						+ '&id=' + id 
-						+ '&key=AIzaSyDpr3gbwjKop-ataKjaOlMYs-Z0XyOzAmM';
+						+ '&key=' + key.getKey();
+
 				console.log(LOG_TAG + "Request " + id + " information URL: " 
 							+ url);	
 				var xmlHttp = this._xmlHttp;

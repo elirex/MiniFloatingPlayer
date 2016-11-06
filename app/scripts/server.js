@@ -36,7 +36,7 @@
 		this.serverSocketId = createInfo.socketId;
 		if(this.serverSocketId > 0) {
 			tcpServer.onAccept.addListener(this._onAccept.bind(this));
-			tcpServer.listen(this.serverSocketId, '127.0.0.1', 8080, 50
+			tcpServer.listen(this.serverSocketId, '127.0.0.1', 12345, 50
 					, this._onListenComplete.bind(this));
 		} else {
 			console.log(LOGTAG, 'error', 'Unable to create socket');
